@@ -125,7 +125,9 @@ func (p *Parser) parseLetStatement() ast.Statement {
 		return nil
 	}
 
-	// FIXME: skip to ';'. Only handling IDENT and ASSIGN. No expressions yet
+	p.nextToken()
+	stmt.Value = p.parseExpression(LOWEST)
+
 	for !p.curTokenIs(token.SEMICOLON) {
 		p.nextToken()
 	}
@@ -135,6 +137,7 @@ func (p *Parser) parseLetStatement() ast.Statement {
 func (p *Parser) parseReturnStatement() ast.Statement {
 	stmt := &ast.ReturnStatement{Token: p.curToken}
 	p.nextToken()
+	stmt.ReturnValue = p.parseExpression(LOWEST)
 	if !p.curTokenIs(token.SEMICOLON) {
 		p.nextToken()
 	}
